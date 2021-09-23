@@ -34,7 +34,6 @@ jobs:
       uses: actions/download-artifact@v2.0.10
       with:
         name: terraform.tfstate
-        path: ${{ env.WORKDIR }}
       continue-on-error: true # since initially there won't be anything stored
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
@@ -66,5 +65,5 @@ jobs:
       uses: actions/upload-artifact@v2.2.4
       with:
         name: terraform.tfstate
-        path: '${{ env.WORKDIR }}/terraform.tfstate'
+        path: terraform.tfstate
 
