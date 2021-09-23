@@ -58,9 +58,6 @@ jobs:
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
       
-    - name: LS
-      run: ls -lha
-      
     - name: Publish Terraform State
       uses: actions/upload-artifact@v2.2.4
       with:
