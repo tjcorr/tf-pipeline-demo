@@ -31,7 +31,7 @@ jobs:
     - name: Download tf-state
       uses: actions/download-artifact@v2.0.10
       with:
-        name: tf.state
+        name: terraform.tfstate
         path: ${{ env.WORKDIR }}
       continue-on-error: true # since initially there won't be anything stored
 
@@ -60,6 +60,6 @@ jobs:
     - name: Publish tf-state
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: tf.state
-        path: ${{ env.WORKDIR }}/tf.state
+        name: terraform.tfstate
+        path: ${{ env.WORKDIR }}/terraform.tfstate
 
