@@ -31,7 +31,7 @@ jobs:
       
     # This should really be done against a remote backend like Terraform Cloud or an Azure Storage Account
     # Normally you don't download artifacts across workflow runs. Doing it this way is very brittle to get the latest state.  
-    # I tired to fix this by only pulling from successful runs against main.
+    # I tried to mitigate this by only pulling from successful runs against main.
     - name: Download Terraform State
       uses: dawidd6/action-download-artifact@v2
       with:
