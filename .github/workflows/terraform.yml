@@ -66,5 +66,5 @@ jobs:
       uses: actions/upload-artifact@v2.2.4
       with:
         name: terraform.tfstate
-        path: ${{ env.WORKDIR }}/terraform.tfstate
+        path: '${{ env.WORKDIR }}/terraform.tfstate'
 
