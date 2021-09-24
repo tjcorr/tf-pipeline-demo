@@ -27,7 +27,7 @@ data "github_repository" "repo" {
 }
 
 resource "github_actions_secret" "example_secret" {
-  repository       = data.github_repository.repo.full_name
-  secret_name      = "tf-sample-secret"
-  plaintext_value  = "super_sekret"
+  repository      = data.github_repository.repo.full_name
+  secret_name     = "tf-sample-secret"
+  plaintext_value = "super_sekret"
 }
