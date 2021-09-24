@@ -29,6 +29,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
+    - name: Setup env
+      run: |
+        export GITHUB_OWNER="${GITHUB_REPOSITORY_OWNER}"
+        env
+
     - name: Print ENV
       run: env
 
