@@ -23,7 +23,7 @@ resource "azurerm_resource_group" "rg-aks" {
 }
 
 data "github_repository" "repo" {
-  full_name = "tjcorr/tf-pipeline-demo"
+  full_name = "tf-pipeline-demo"
 }
 
 resource "github_actions_secret" "example_secret" {
