@@ -15,7 +15,9 @@ provider "azurerm" {
   features {}
 }
 
-provider "github" {}
+provider "github" {
+  owner = "tjcorr"
+}
 
 resource "azurerm_resource_group" "rg-aks" {
   name     = var.resource_group_name
