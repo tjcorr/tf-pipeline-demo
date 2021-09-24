@@ -23,11 +23,11 @@ resource "azurerm_resource_group" "rg-aks" {
 }
 
 data "github_repository" "repo" {
-  full_name = "tf-pipeline-demo"
+  full_name = var.repo_full_name
 }
 
 resource "github_actions_secret" "example_secret" {
-  repository      = data.github_repository.repo.full_name
+  repository      = data.github_repository.repo.name
   secret_name     = "tf_sample_secret"
   plaintext_value = "super_sekret"
 }

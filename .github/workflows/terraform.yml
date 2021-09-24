@@ -19,6 +19,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
       GITHUB_OWNER: "${{ github.repository_owner }}"
+      TF_VAR_repo_full_name: "${{ github.repository }}"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
