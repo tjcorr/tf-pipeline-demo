@@ -29,6 +29,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
+    - name: Print ENV
+      uses: env
+      
     # This should really be done against a remote backend like Terraform Cloud or an Azure Storage Account
     # Normally you don't download artifacts across workflow runs. Doing it this way is very brittle to get the latest state.  
     # I tried to mitigate this by only pulling from successful runs against main.
