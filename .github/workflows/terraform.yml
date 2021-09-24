@@ -18,6 +18,7 @@ jobs:
       ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+      GITHUB_OWNER: "${{ GITHUB_REPOSITORY_OWNER }}"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -28,12 +29,7 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
-      
-    - name: Setup env
-      run: |
-        export GITHUB_OWNER="${GITHUB_REPOSITORY_OWNER}"
-        env
-
+ 
     - name: Print ENV
       run: env
 
