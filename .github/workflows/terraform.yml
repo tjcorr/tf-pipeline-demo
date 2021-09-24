@@ -66,6 +66,9 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
       
     - name: Publish Terraform State
       uses: actions/upload-artifact@v2.2.4
