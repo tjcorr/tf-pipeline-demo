@@ -57,7 +57,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -detailed-exitcode
       id: tf-plan
 
     - name: Check status
