@@ -4,10 +4,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 2.62"
     }
-    github = {
-      source  = "integrations/github"
-      version = "~> 4.0"
-    }
   }
 }
 
@@ -20,14 +16,4 @@ provider "github" {}
 resource "azurerm_resource_group" "rg-aks" {
   name     = var.resource_group_name
   location = var.location
-}
-
-data "github_repository" "repo" {
-  full_name = var.repo_full_name
-}
-
-resource "github_actions_secret" "example_secret" {
-  repository      = data.github_repository.repo.name
-  secret_name     = "tf_sample_secret"
-  plaintext_value = "super_sekret"
 }
