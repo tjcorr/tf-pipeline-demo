@@ -30,9 +30,6 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
- 
-    - name: Print ENV
-      run: env
 
     # This should really be done against a remote backend like Terraform Cloud or an Azure Storage Account
     # Normally you don't download artifacts across workflow runs. Doing it this way is very brittle to get the latest state.  
@@ -61,6 +58,10 @@ jobs:
     # Generates an execution plan for Terraform
     - name: Terraform Plan
       run: terraform plan
+      id: tf-plan
+
+    - name: Check status
+      run: echo last exit code ${{ steps.tf-plan.outputs.exitcode }}
 
       # On push to main, build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
