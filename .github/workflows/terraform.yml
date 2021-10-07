@@ -57,7 +57,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -detailed-exitcode
+      run: terraform plan -detailed-exitcode -out tfplan
       id: tf-plan
       continue-on-error: true
 
@@ -79,4 +79,11 @@ jobs:
       with:
         name: terraform.tfstate
         path: terraform.tfstate
+
+    - name: Publish Terraform Plan
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: tfplan
+        path: tfplan
+
 
