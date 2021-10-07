@@ -27,7 +27,9 @@ jobs:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
     environment: production
-    
+    outputs:
+      runApply: steps.tf-plan.outputs.exitcode == 2
+
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
@@ -88,7 +90,7 @@ jobs:
 
   terraform-apply:
     name: 'Terraform Apply'
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.runApply
     runs-on: ubuntu-latest
     environment: production-approval
     needs: [terraform-plan]
