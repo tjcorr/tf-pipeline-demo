@@ -5,6 +5,13 @@ terraform {
       version = ">= 2.62"
     }
   }
+
+  backend "azurerm" {
+    resource_group_name  = "rg-tf-pipeline-demo-state"
+    storage_account_name = "tfpipelinedemostate"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+}
 }
 
 provider "azurerm" {

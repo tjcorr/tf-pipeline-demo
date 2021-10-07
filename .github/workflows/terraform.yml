@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  terraform-plan:
+    name: 'Terraform Plan'
     runs-on: ubuntu-latest
     environment: production
     
@@ -31,18 +31,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # This should really be done against a remote backend like Terraform Cloud or an Azure Storage Account
-    # Normally you don't download artifacts across workflow runs. Doing it this way is very brittle to get the latest state.  
-    # I tried to mitigate this by only pulling from successful runs against main.
-    - name: Download Terraform State
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        workflow: terraform.yml
-        workflow_conclusion: success
-        branch: main
-        name: terraform.tfstate
-      continue-on-error: true # since initially there won't be anything stored
-
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -56,34 +44,30 @@ jobs:
       run: terraform fmt -check
 
     # Generates an execution plan for Terraform
+    # An exit code of 2 indicates there were changes detected. We want to change those to 0 so the task doesn't appear as failed.
     - name: Terraform Plan
-      run: terraform plan -detailed-exitcode -out tfplan
+      run: |
+        terraform plan -detailed-exitcode -out tfplan
+        if [ $? -eq 0 ] || [ $? -eq 2 ]; then exit 0; else exit 1; fi
       id: tf-plan
-      continue-on-error: true
 
-    - name: Check For Changes
-      run: echo found changes
-      if: ${{ steps.tf-plan.outputs.exitcode == 2 }}   
-
-      # On push to main, build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-
-      
+    # Save plan to artifacts  
     - name: Publish Terraform State
-      uses: actions/upload-artifact@v2.2.4
-      with:
-        name: terraform.tfstate
-        path: terraform.tfstate
-
-    - name: Publish Terraform Plan
       uses: actions/upload-artifact@v2.2.4
       with:
         name: tfplan
         path: tfplan
+      
+    # If this is a PR post the changes
 
+# If this isn't PR do a job to apply
 
+#checkout 
+
+#tf setup
+
+#tf init
+
+#download plan artifact
+
+#tf apply
