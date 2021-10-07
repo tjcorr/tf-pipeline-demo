@@ -5,6 +5,8 @@ on:
     branches:
     - main
   pull_request:
+    branches:
+    - main
 
 jobs:
   terraform-plan:
@@ -65,6 +67,25 @@ jobs:
         path: tfplan
       
     # If this is a PR post the changes
+    # todo does this work if i push another commit to the PR?
+    - name: Push Terraform Output to PR
+      if: github.ref != 'refs/heads/main'
+      uses: actions/github-script@v2
+      env:
+          PLAN: "${{ steps.tf-plan.outputs.stderr }}\n${{ steps.tf-plan.outputs.stdout }}"
+      with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+               const output = ` ### Terraform Plan Report
+
+                \`\`\`${process.env.PLAN}\`\`\` `;
+
+                github.issues.createComment({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: output
+                 })
 
 # If this isn't PR do a job to apply
 
