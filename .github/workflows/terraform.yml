@@ -52,7 +52,7 @@ jobs:
       # consider publishing error to PR
     - name: Check Terraform Plan Exit Code
       run: |
-        if [ ${{ steps.tf-plan.outputs.exitcode }} -eq 1 ] then
+        if [ ${{ steps.tf-plan.outputs.exitcode }} -eq 1 ]; then
           echo Terraform Plan Failed!
           exit 1
         fi
