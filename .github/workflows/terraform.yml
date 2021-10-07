@@ -85,7 +85,7 @@ jobs:
                     repo: context.repo.repo,
                     body: output
                  })
-                 
+
   terraform-apply:
     name: 'Terraform Apply'
     if: github.ref == 'refs/heads/main'
@@ -115,5 +115,5 @@ jobs:
 
     # Terraform Apply
     - name: Terraform Apply
-      run: terraform apply
+      run: terraform apply -auto-approve tfplan
 
