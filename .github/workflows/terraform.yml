@@ -44,12 +44,12 @@ jobs:
       run: terraform fmt -check
 
     # Generates an execution plan for Terraform
-    # An exit code of 2 indicates there were changes detected. We want to change those to 0 so the task doesn't appear as failed.
+    # An exit code of 2 indicates there were changes detected and will throw an error. Just continue for now, we'll check next step
     - name: Terraform Plan
-      run: terraform plan -detailed-exitcode -out tfplan || echo last code ${{ steps.tf-plan.outputs.exitcode }}
+      run: terraform plan -detailed-exitcode -out tfplan || exit 0
       id: tf-plan
 
-    - name: Check Exit Code
+    - name: Check Terraform Plan Exit Code
       run: echo last code ${{ steps.tf-plan.outputs.exitcode }}
 
     # Save plan to artifacts  

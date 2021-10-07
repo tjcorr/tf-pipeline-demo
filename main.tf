@@ -18,9 +18,7 @@ provider "azurerm" {
   features {}
 }
 
-provider "github" {}
-
-resource "azurerm_resource_group" "rg-aks" {
+resource "azurerm_resource_groupdfsa" "rg-aks" {
   name     = var.resource_group_name
   location = var.location
 }
