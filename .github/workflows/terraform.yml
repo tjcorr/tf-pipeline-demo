@@ -48,7 +48,7 @@ jobs:
     # Generates an execution plan for Terraform
     # An exit code of 2 indicates there were changes detected and will throw an error. Just continue for now, we'll check next step
     - name: Terraform Plan
-      run: terraform plan -detailed-exitcode -out tfplan || exit 0
+      run: terraform plan -detailed-exitcode -no-color -out tfplan || exit 0
       id: tf-plan
 
       # consider publishing error to PR
