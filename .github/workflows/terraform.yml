@@ -49,8 +49,13 @@ jobs:
       run: terraform plan -detailed-exitcode -out tfplan || exit 0
       id: tf-plan
 
+      # consider publishing error to PR
     - name: Check Terraform Plan Exit Code
-      run: echo last code ${{ steps.tf-plan.outputs.exitcode }}
+      run: |
+        if [ ${{ steps.tf-plan.outputs.exitcode }} -eq 1 ] then
+          echo Terraform Plan Failed!
+          exit 1
+        fi
 
     # Save plan to artifacts  
     - name: Publish Terraform State

@@ -18,7 +18,7 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_groupdfsa" "rg-aks" {
+resource "azurerm_resource_groupasfd" "rg-aks" {
   name     = var.resource_group_name
   location = var.location
 }
