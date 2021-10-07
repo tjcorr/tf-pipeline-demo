@@ -46,7 +46,7 @@ jobs:
     # Generates an execution plan for Terraform
     # An exit code of 2 indicates there were changes detected. We want to change those to 0 so the task doesn't appear as failed.
     - name: Terraform Plan
-      run: terraform plan -detailed-exitcode -out tfplan || echo last code $?
+      run: terraform plan -detailed-exitcode -out tfplan || echo last code ${{ steps.tf-plan.outputs.exitcode }}
       id: tf-plan
 
     # Save plan to artifacts  
