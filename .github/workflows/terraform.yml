@@ -49,6 +49,9 @@ jobs:
       run: terraform plan -detailed-exitcode -out tfplan || echo last code ${{ steps.tf-plan.outputs.exitcode }}
       id: tf-plan
 
+    - name: Check Exit Code
+      run: echo last code ${{ steps.tf-plan.outputs.exitcode }}
+
     # Save plan to artifacts  
     - name: Publish Terraform State
       uses: actions/upload-artifact@v2.2.4
