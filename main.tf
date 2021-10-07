@@ -11,7 +11,7 @@ terraform {
     storage_account_name = "tfpipelinedemostate"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
-}
+  }
 }
 
 provider "azurerm" {
