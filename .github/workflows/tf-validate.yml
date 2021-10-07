@@ -3,6 +3,10 @@ name: 'Terraform Check'
 on:
   push:
 
+branding:
+  icon: 'check-square'  
+  color: 'orange'
+
 jobs:
   terraform-plan:
     name: 'Terraform Check'
