@@ -113,6 +113,11 @@ jobs:
         name: tfplan
         path: tfplan
 
+    - name: See what's in tfplan
+      run: | 
+        ls -lha
+        ls -lha tfplan/
+
     # Terraform Apply
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
