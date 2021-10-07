@@ -8,26 +8,26 @@ on:
     branches:
     - main
 
+#using env secrets is the prefered approach for CI/CD tools. AZ login only works for user accounts and not for service principals.
+env:
+  ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
+  ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+  ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+  GITHUB_OWNER: "${{ github.repository_owner }}"
+  TF_VAR_repo_full_name: "${{ github.repository }}"
+
+# Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+defaults:
+  run:
+    shell: bash
+
 jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
     environment: production
     
-    #using env secrets is the prefered approach for CI/CD tools. AZ login only works for user accounts and not for service principals.
-    env:
-      ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
-      ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
-      ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
-      ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
-      GITHUB_OWNER: "${{ github.repository_owner }}"
-      TF_VAR_repo_full_name: "${{ github.repository }}"
-
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
-
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
@@ -60,14 +60,13 @@ jobs:
         fi
 
     # Save plan to artifacts  
-    - name: Publish Terraform State
-      uses: actions/upload-artifact@v2.2.4
+    - name: Publish Terraform Plan
+      uses: actions/upload-artifact@v2
       with:
         name: tfplan
         path: tfplan
       
     # If this is a PR post the changes
-    # todo does this work if i push another commit to the PR?
     - name: Push Terraform Output to PR
       if: github.ref != 'refs/heads/main'
       uses: actions/github-script@v2
@@ -87,14 +86,34 @@ jobs:
                     body: output
                  })
 
-# If this isn't PR do a job to apply
+ terraform-apply:
+    name: 'Terraform Apply'
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production-approval
+    needs: [terraform-plan]
+    
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
 
-#checkout 
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
 
-#tf setup
+    # Download saved plan from artifacts  
+    - name: Download Terraform Plan
+      uses: actions/download-artifact@v2
+      with:
+        name: tfplan
+        path: tfplan
 
-#tf init
+    # Terraform Apply
+    - name: Terraform Apply
+      run: terraform apply
 
-#download plan artifact
-
-#tf apply
