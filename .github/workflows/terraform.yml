@@ -85,8 +85,8 @@ jobs:
                     repo: context.repo.repo,
                     body: output
                  })
-
- terraform-apply:
+                 
+  terraform-apply:
     name: 'Terraform Apply'
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
