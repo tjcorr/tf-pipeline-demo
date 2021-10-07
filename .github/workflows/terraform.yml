@@ -111,12 +111,6 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: tfplan
-        path: tfplan
-
-    - name: See what's in tfplan
-      run: | 
-        ls -lha
-        ls -lha tfplan/
 
     # Terraform Apply
     - name: Terraform Apply
