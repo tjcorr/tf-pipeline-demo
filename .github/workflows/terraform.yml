@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     outputs:
-      runApply: steps.tf-plan.outputs.exitcode == 2
+      runApply: ${{ steps.tf-plan.outputs.exitcode -eq 2 }}
 
     steps:
     # Checkout the repository to the GitHub Actions runner
