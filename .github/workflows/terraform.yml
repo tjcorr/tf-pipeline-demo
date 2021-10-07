@@ -47,7 +47,7 @@ jobs:
     # An exit code of 2 indicates there were changes detected. We want to change those to 0 so the task doesn't appear as failed.
     - name: Terraform Plan
       run: |
-        terraform plan -detailed-exitcode -out tfplan
+        terraform plan -detailed-exitcode -out tfplan || echo does this run?
         if [ $? -eq 0 ] || [ $? -eq 2 ]; then exit 0; else exit 1; fi
       id: tf-plan
 
