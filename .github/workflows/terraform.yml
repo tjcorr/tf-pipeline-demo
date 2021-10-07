@@ -90,7 +90,7 @@ jobs:
 
   terraform-apply:
     name: 'Terraform Apply'
-    if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.runApply
+    if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.runApply == 1
     runs-on: ubuntu-latest
     environment: production-approval
     needs: [terraform-plan]
