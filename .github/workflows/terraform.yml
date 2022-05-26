@@ -67,6 +67,15 @@ jobs:
       with:
         name: tfplan
         path: tfplan
+        
+    # Publish Terraform Plan as task summary
+    - name: Publish Terraform Plan to Task Summary
+      run: |
+        TERRAFORM_PLAN=$(terraform show -no-color tfplan)
+        echo "## Terraform Plan Output" >> $GITHUB_STEP_SUMMARY
+        echo '```terraform' >> $GITHUB_STEP_SUMMARY
+        echo "$TERRAFORM_PLAN" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
       
     # If this is a PR post the changes
     - name: Push Terraform Output to PR
