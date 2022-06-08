@@ -8,6 +8,6 @@ This is a sample repository that shows how to build a GitHub Actions workflow to
   - Writes the output of the plan as a comment on the PR
   - For commits to main run a plan follow by apply if there are any changes. 
   - Require approvals before running terraform apply
-
+- A workflow that runs nightly to check for configuration drift and creat a new issue if detected
 
 
