@@ -50,9 +50,7 @@ jobs:
     - name: Terraform Plan
       id: tf-plan
       run: |
-        terraform plan -detailed-exitcode -no-color -out tfplan
-        echo "do we get here"
-        export exitcode=$?
+        terraform plan -detailed-exitcode -no-color -out tfplan ; export exitcode=$?
         echo "::set-output name=exitcode::$exitcode"
         
         if [ $exitcode -eq 1 ]; then
