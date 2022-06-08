@@ -8,19 +8,14 @@ on:
     branches:
     - main
 
-#using env secrets is the prefered approach for CI/CD tools. AZ login only works for user accounts and not for service principals.
+
+#These environment variables are used by the terraform azure provider to authenticate. 
+#To eliminate the use of stored secrets consider switching to OIDD.
 env:
   ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
   ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
   ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
-  GITHUB_OWNER: "${{ github.repository_owner }}"
-  TF_VAR_repo_full_name: "${{ github.repository }}"
-
-# Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-defaults:
-  run:
-    shell: bash
 
 jobs:
   terraform-plan:
@@ -35,59 +30,87 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    # Install the latest version of the Terraform CLI
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
       
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       run: terraform init
 
     # Checks that all Terraform configuration files adhere to a canonical format
+    # Will fail the build if not
     - name: Terraform Format
       run: terraform fmt -check
 
     # Generates an execution plan for Terraform
-    # An exit code of 2 indicates there were changes detected and will throw an error. Just continue for now, we'll check next step
+    # An exit code of 0 indicated no changes, 1 a terraform failure, 2 there are pending changes.
     - name: Terraform Plan
-      run: terraform plan -detailed-exitcode -no-color -out tfplan || exit 0
       id: tf-plan
-
-      # consider publishing error to PR
-    - name: Check Terraform Plan Exit Code
       run: |
-        if [ ${{ steps.tf-plan.outputs.exitcode }} -eq 1 ]; then
+        export exitcode=0
+        terraform plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
+
+        echo "::set-output name=exitcode::$exitcode"
+        
+        if [ $exitcode -eq 1 ]; then
           echo Terraform Plan Failed!
           exit 1
+        else 
+          exit 0
         fi
-
+        
     # Save plan to artifacts  
     - name: Publish Terraform Plan
       uses: actions/upload-artifact@v2
       with:
         name: tfplan
         path: tfplan
+        
+    # Create string output of Terraform Plan
+    - name: Create String Output
+      id: tf-plan-string
+      run: |
+        TERRAFORM_PLAN=$(terraform show -no-color tfplan)
+        echo "## Terraform Plan Output" >> tf.string
+        echo "<details><summary>Click to expand</summary>" >> tf.string
+        echo "" >> tf.string
+        echo '```terraform' >> tf.string
+        echo "$TERRAFORM_PLAN" >> tf.string
+        echo '```' >> tf.string
+        echo "</details>" >> tf.string
+        
+        SUMMARY=$(cat tf.string)
+        SUMMARY="${SUMMARY//'%'/'%25'}"
+        SUMMARY="${SUMMARY//$'\n'/'%0A'}"
+        SUMMARY="${SUMMARY//$'\r'/'%0D'}"
+        
+        echo "::set-output name=summary::$SUMMARY"
+
+    # Publish Terraform Plan as task summary
+    - name: Publish Terraform Plan to Task Summary
+      run: |
+        cat tf.string >> $GITHUB_STEP_SUMMARY
       
     # If this is a PR post the changes
     - name: Push Terraform Output to PR
       if: github.ref != 'refs/heads/main'
       uses: actions/github-script@v2
       env:
-          PLAN: "${{ steps.tf-plan.outputs.stderr }}\n${{ steps.tf-plan.outputs.stdout }}"
+        SUMMARY: "${{ steps.tf-plan-string.outputs.summary }}"
       with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-               const output = ` ### Terraform Plan Report
-
-                \`\`\`${process.env.PLAN}\`\`\` `;
-
-                github.issues.createComment({
-                    issue_number: context.issue.number,
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    body: output
-                 })
-
+            const body = `${process.env.SUMMARY}`;
+            github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+            })
+                
   terraform-apply:
     name: 'Terraform Apply'
     if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.tfplanExitCode == 2
