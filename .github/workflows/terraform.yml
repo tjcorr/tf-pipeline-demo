@@ -102,7 +102,7 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: ${{ steps.tf-plan-string.outputs.summary }}
+                body: "${{ steps.tf-plan-string.outputs.summary }}"
              })
 
   terraform-apply:
