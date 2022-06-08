@@ -98,15 +98,17 @@ jobs:
     - name: Push Terraform Output to PR
       if: github.ref != 'refs/heads/main'
       uses: actions/github-script@v2
+      env:
+        SUMMARY: "${{ steps.tf-plan-string.outputs.summary }}"
       with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const body = `${process.env.SUMMARY}`;
             github.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: "${{ steps.tf-plan-string.outputs.summary }}"
-             })
+                body: body
 
   terraform-apply:
     name: 'Terraform Apply'
