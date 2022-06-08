@@ -8,7 +8,7 @@ terraform {
 
   backend "azurerm" {
     resource_group_name  = "rg-tf-pipeline-demo-state"
-    storage_account_name = "tfpipelinedemostate"
+    storage_account_name = "tfpipelinedemo"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
     use_oidc             = true
