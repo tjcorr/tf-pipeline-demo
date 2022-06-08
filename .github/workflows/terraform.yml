@@ -52,9 +52,7 @@ jobs:
       run: |
         export exitcode=0
         terraform plan -detailed-exitcode -no-color -out tfplan || export exitcode=$?
-        echo "got here"
-        echo "exit code: $exitcode"
-        
+
         echo "::set-output name=exitcode::$exitcode"
         
         if [ $exitcode -eq 1 ]; then
@@ -100,17 +98,14 @@ jobs:
     - name: Push Terraform Output to PR
       if: github.ref != 'refs/heads/main'
       uses: actions/github-script@v2
-      env:
-        SUMMARY: "${{ steps.tf-plan-string.outputs.summary }}"
       with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const body = `${process.env.SUMMARY}`;
             github.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: body
+                body: "${{ steps.tf-plan-string.outputs.summary }}"
              })
 
   terraform-apply:
