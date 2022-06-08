@@ -109,7 +109,8 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: body
-
+            })
+                
   terraform-apply:
     name: 'Terraform Apply'
     if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.tfplanExitCode == 2
