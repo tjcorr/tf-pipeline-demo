@@ -107,3 +107,9 @@ jobs:
                 title: "Terraform Configuration Drift Detected",
                 body: body
              })
+             
+ 
+    # Mark the workflow as failed if drift detected 
+    - name: Error on Failure
+      if: steps.tf-plan.outputs.exitcode == 2
+      run: exit 1
