@@ -1,6 +1,20 @@
 # GitHub Actions Workflows for Terraform
 
-This is a sample repository that shows how to build a GitHub Actions workflow to manage infrastructure with Terraform. It includes:
+This is a sample repository that shows how to build GitHub Actions workflows to manage infrastructure with Terraform. 
+
+## Architecture
+
+<img width="2159" alt="GitHub Actions CICD for Terraform" src="https://user-images.githubusercontent.com/1248896/189254453-439dd558-fc6c-4377-b01c-d5e54cc49403.png">
+
+## Dataflow
+
+1. Create a new branch and check in the needed IaC code modifications.
+2. Create a Pull Request (PR) in GitHub once you're ready to merge your changes into your environment.
+3. A GitHub Actions workflow will trigger to ensure your code is well formatted. In addition, a Terraform Plan or Bicep whatif analysis should run to generate a preview of the changes that will happen in your Azure environment.
+4. Once appropriately reviewed, the PR can be merged into your main branch.
+5. Another GitHub Actions workflow will trigger from the main branch and execute the changes using your IaC provider.
+6. A regularly scheduled GitHub Action workflow should also run to look for any configuration drift in your environment and create a new issue if changes are detected.
+
 
 ## Workflows
 
