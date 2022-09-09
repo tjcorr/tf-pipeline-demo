@@ -1,2 +1,2 @@
-resource_group_name = "rg-tf-pipeline-demo-test3"
+resource_group_name = "rg-tf-pipeline-demo-test"
 location            = "eastus"
