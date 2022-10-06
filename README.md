@@ -55,7 +55,7 @@ To use these workflows in your environment several prerequiste steps are require
     
 4. **Configure Terraform State Location**
 
-    Terraform utilizes a [state file](https://www.terraform.io/language/state) to store information about the current state of your managed infrastructure and associated configuration. This file will need to be persisted between different runs of the workflow. The recommended approach is to store this file within an Azure Storage Account or other similiar remote backend. The [Terraform backend block](https://github.com/tjcorr/tf-pipeline-demo/blob/main/main.tf#L9-L15) will need to be configured to point to an appropriate location where your workflow has permissions. Normally this location would be created manually or via a separate workflow.
+    Terraform utilizes a [state file](https://www.terraform.io/language/state) to store information about the current state of your managed infrastructure and associated configuration. This file will need to be persisted between different runs of the workflow. The recommended approach is to store this file within an Azure Storage Account or other similiar remote backend. The [Terraform backend block]() `TODO: add link` will need to be configured to point to an appropriate location where your workflow has permissions. Normally this location would be created manually or via a separate workflow.
 
 5. **Activate the Workflows**
 
