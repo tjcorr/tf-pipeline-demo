@@ -8,11 +8,11 @@ This is a sample repository that shows how to build GitHub Actions workflows to 
 
 ## Dataflow
 
-1. Create a new branch and check in the needed IaC code modifications.
+1. Create a new branch and check in the needed Terraform code modifications.
 2. Create a Pull Request (PR) in GitHub once you're ready to merge your changes into your environment.
-3. A GitHub Actions workflow will trigger to ensure your code is well formatted. In addition, a Terraform Plan or Bicep whatif analysis should run to generate a preview of the changes that will happen in your Azure environment.
+3. A GitHub Actions workflow will trigger to ensure your code is well formatted. In addition, a Terraform Plan analysis should run to generate a preview of the changes that will happen in your Azure environment.
 4. Once appropriately reviewed, the PR can be merged into your main branch.
-5. Another GitHub Actions workflow will trigger from the main branch and execute the changes using your IaC provider.
+5. Another GitHub Actions workflow will trigger from the main branch and execute the changes using Terraform.
 6. A regularly scheduled GitHub Action workflow should also run to look for any configuration drift in your environment and create a new issue if changes are detected.
 
 
@@ -60,8 +60,3 @@ To use these workflows in your environment several prerequiste steps are require
 5. **Activate the Workflows**
 
     In each workflow file uncomment the top trigger section to enable the workflows to run automatically.
-
-## Additional Resources
-
-Additional information on how to use GitHub Actions to deploy AKS can be found on the [Azure Architecture Center](...). `TODO`: add the link
-
